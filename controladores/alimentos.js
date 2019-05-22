@@ -111,9 +111,38 @@ function postAlimento(req, res)
     });
 }
 
+function obtenerAlimentoNombre(req, res)
+{
+    let termino = req.query.term;
+    if (!termino)
+    {
+        res.sendStatus(422);
+        return;
+    }
+
+    AlimentoModel.findOne({nombreProducto: new RegExp(termino, "i")}, function(err, doc)
+    {
+        if (err)
+        {
+            console.error(err);
+            res.sendStatus(500);
+            return;
+        }
+
+        if (!doc)
+        {
+            res.sendStatus(404);
+            return;
+        }
+
+        res.status(200).send(doc);
+    });
+}
+
 module.exports =
 {
     obtenerAlimentos,
     obtenerAlimento,
-    postAlimento
+    postAlimento,
+    obtenerAlimentoNombre
 };
